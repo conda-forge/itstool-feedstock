@@ -19,7 +19,7 @@ source:
     - 0004-Replace-python-libxml2-with-lxml.patch
 
 build:
-  number: 0
+  number: 1
   skip:
     - win
   script: |
