@@ -19,11 +19,14 @@ source:
     - 0004-Replace-python-libxml2-with-lxml.patch
 
 build:
-  number: 1
+  number: 2
   skip:
     - win
   script: |
     autoreconf --force --install
+    if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
+      export ac_cv_path_PYTHON=$BUILD_PREFIX/bin/python
+    fi
     ./configure --prefix=$PREFIX
     make -j${CPU_COUNT}
     make install
@@ -35,6 +38,11 @@ requirements:
     - autoconf
     - automake
     - make
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
+        - lxml
   host:
     - python
     - gettext
@@ -44,9 +52,13 @@ requirements:
     - lxml
 
 tests:
-  - script: |
-      itstool --version
-      test -f $PREFIX/bin/itstool
+  - package_contents:
+      bin:
+        - itstool
+  - if: build_platform == target_platform
+    then:
+      script: |
+        itstool --version
 
 about:
   homepage: https://itstool.org
