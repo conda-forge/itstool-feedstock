@@ -52,9 +52,13 @@ requirements:
     - lxml
 
 tests:
-  - script: |
-      itstool --version
-      test -f $PREFIX/bin/itstool
+  - package_contents:
+      bin:
+        - itstool
+  - if: build_platform == target_platform
+    then:
+      script: |
+        itstool --version
 
 about:
   homepage: https://itstool.org
