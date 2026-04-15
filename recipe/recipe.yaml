@@ -2,15 +2,14 @@
 schema_version: 1
 
 context:
-  name: itstool
   version: "2.0.7"
 
 package:
-  name: ${{ name|lower }}
+  name: itstool
   version: ${{ version }}
 
 source:
-  url: http://files.itstool.org/${{ name }}/${{ name }}-${{ version }}.tar.bz2
+  url: http://files.itstool.org/itstool/itstool-${{ version }}.tar.bz2
   sha256: 6b9a7cd29a12bb95598f5750e8763cee78836a1a207f85b74d8b3275b27e87ca
   patches:
     - 0001-Fix-the-crash-from-912099.patch
@@ -19,50 +18,39 @@ source:
     - 0004-Replace-python-libxml2-with-lxml.patch
 
 build:
-  number: 2
-  skip:
-    - win
-  script: |
-    autoreconf --force --install
-    if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
-      export ac_cv_path_PYTHON=$BUILD_PREFIX/bin/python
-    fi
-    ./configure --prefix=$PREFIX
-    make -j${CPU_COUNT}
-    make install
+  number: 3
+  skip: win
+  script:
+    - autoreconf --force --install
+    - ./configure "--prefix=${PREFIX}"
+    - make -j${CPU_COUNT}
+    - make install
 
 requirements:
   build:
-    - ${{ compiler('c') }}
-    - ${{ stdlib('c') }}
+    - ${{ compiler("c") }}
+    - ${{ stdlib("c") }}
     - autoconf
     - automake
     - make
-    - if: build_platform != target_platform
-      then:
-        - python
-        - cross-python_${{ target_platform }}
-        - lxml
   host:
-    - python
     - gettext
     - lxml
-  run:
     - python
+  run:
     - lxml
+    - python
 
 tests:
   - package_contents:
       bin:
         - itstool
-  - if: build_platform == target_platform
-    then:
-      script: |
-        itstool --version
+  - script:
+      - itstool --version
 
 about:
   homepage: https://itstool.org
-  summary: 'Translate XML with PO files using W3C Internationalization Tag Set rules'
+  summary: Translate XML with PO files using W3C Internationalization Tag Set rules
   description: |
     ITS Tool allows you to translate your XML documents with PO files,
     using rules from the W3C Internationalization Tag Set (ITS) to
@@ -72,7 +60,7 @@ about:
   license_file:
     - COPYING
     - COPYING.GPL3
-  documentation: https://itstool.org/documentation/
+  documentation: https://itstool.org/documentation
   repository: https://github.com/itstool/itstool
 
 extra:
