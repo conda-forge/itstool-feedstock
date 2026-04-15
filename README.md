@@ -11,7 +11,7 @@ Summary: Translate XML with PO files using W3C Internationalization Tag Set rule
 
 Development: https://github.com/itstool/itstool
 
-Documentation: https://itstool.org/documentation/
+Documentation: https://itstool.org/documentation
 
 ITS Tool allows you to translate your XML documents with PO files,
 using rules from the W3C Internationalization Tag Set (ITS) to
