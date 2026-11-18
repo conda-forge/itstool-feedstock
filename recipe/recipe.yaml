@@ -18,7 +18,7 @@ source:
     - 0004-Replace-python-libxml2-with-lxml.patch
 
 build:
-  number: 5
+  number: 6
   skip: win
   script:
     - autoreconf --force --install
